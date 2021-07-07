@@ -1,4 +1,4 @@
-function generator(matLen, gr, grEat,pr,c,toxic) {
+function generator(matLen, gr, grEat,pr,c,toxic,water) {
     let matrix = [];
 
     for (let i = 0; i < matLen; i++) {
@@ -42,13 +42,20 @@ function generator(matLen, gr, grEat,pr,c,toxic) {
             matrix[x][y] = 5;
         }
     }
+    for (let i = 0; i < water; i++) {
+        let x = Math.floor(Math.random() * matLen);
+        let y = Math.floor(Math.random() * matLen);
+        if (matrix[x][y] == 0) {
+            matrix[x][y] = 6;
+        }
+    }
     
     return matrix;
 }
 
-let side = 55;
+let side = 40;
 
-let matrix = generator(19, 30, 20,5,5,10);
+let matrix = generator(24, 40, 20,5,10,10,10);
 
 //___________________________
 var grassArr = [];
@@ -56,6 +63,7 @@ var grassEaterArr = [];
 var predatorArr = [];
 var coinArr = [];
 var toxicArr = [];
+var waterArr = [];//___________________________________
 
 
 function setup() {
@@ -91,6 +99,10 @@ function setup() {
                 var toxic = new Toxic(j, i);
                 toxicArr.push(toxic);
             }
+            if(matrix[i][j]== 6){
+                var w = new Water(j, i);
+                waterArr.push(w);
+            }
 
         }
     }
@@ -117,6 +129,8 @@ function draw() {
             }
             else if (matrix[y][x] == 3) {
                 fill('red');
+            }    else if (matrix[y][x] == 6) {
+                fill('blue');
             }
 
             rect(x * side, y * side, side, side);
@@ -155,8 +169,10 @@ function draw() {
 
     for (var i in predatorArr) {
         predatorArr[i].eat();
+    }
 
-
+    for (var i in waterArr) {
+        waterArr[i].mul();
     }
 
 

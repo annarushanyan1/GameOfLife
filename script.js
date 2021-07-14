@@ -1,121 +1,17 @@
-function generator(matLen, gr, grEat,pr,c,toxic,water) {
-    let matrix = [];
-
-    for (let i = 0; i < matLen; i++) {
-        matrix[i] = [];
-        for (let j = 0; j < matLen; j++) {
-            matrix[i][j] = 0;
-        }
-    }
-    for (let i = 0; i < gr; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 1;
-        }
-    }
-    for (let i = 0; i < grEat; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 2;
-        }
-    }
-    for (let i = 0; i < pr; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 3;
-        }
-    }
-    for (let i = 0; i < c; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 4;
-        }
-    }
-    for (let i = 0; i < toxic; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 5;
-        }
-    }
-    for (let i = 0; i < water; i++) {
-        let x = Math.floor(Math.random() * matLen);
-        let y = Math.floor(Math.random() * matLen);
-        if (matrix[x][y] == 0) {
-            matrix[x][y] = 6;
-        }
-    }
-    
-    return matrix;
-}
-
+var socket = io();
 let side = 40;
-
-let matrix = generator(24, 40, 20,5,10,10,10);
-
-//___________________________
-var grassArr = [];
-var grassEaterArr = [];
-var predatorArr = [];
-var coinArr = [];
-var toxicArr = [];
-var waterArr = [];//___________________________________
-
 
 function setup() {
     frameRate(5);
-    createCanvas(matrix[0].length * side, matrix.length * side);
+    createCanvas(20 * 40,  24* 40);
     background('#acacac');
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
 
-            if (matrix[i][j] == 1) {
-                var gr = new Grass(j, i);
-                grassArr.push(gr);
-
-            }
-
-            if (matrix[i][j] == 2) {
-                var grEr = new GrassEater(j, i);
-                grassEaterArr.push(grEr);
-
-            }
-
-            if (matrix[i][j] == 3) {
-                var predator = new Predator(j, i);
-                predatorArr.push(predator);
-
-            }
-            if (matrix[i][j] == 4) {
-                var c = new Coin(j, i);
-                coinArr.push(c);
-
-            }
-            if(matrix[i][j]== 5){
-                var toxic = new Toxic(j, i);
-                toxicArr.push(toxic);
-            }
-            if(matrix[i][j]== 6){
-                var w = new Water(j, i);
-                waterArr.push(w);
-            }
-
-        }
-    }
-
-
-
-
-
+    
 
 }
 
-function draw() {
-
+function nkarel(matrix) {
+   
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
 
@@ -157,27 +53,15 @@ function draw() {
         }
     }
 
-    for (var i in grassArr) {
-        grassArr[i].mul();
-    }
-
-    for (var i in grassEaterArr) {
-        grassEaterArr[i].mul();
-        grassEaterArr[i].eat();
-    }
-
-
-    for (var i in predatorArr) {
-        predatorArr[i].eat();
-    }
-
-    for (var i in waterArr) {
-        waterArr[i].mul();
-    }
-
 
 
 }
+
+setInterval(
+    function () {
+    socket.on('send matrix', nkarel)
+    },1000
+)
 
 
 

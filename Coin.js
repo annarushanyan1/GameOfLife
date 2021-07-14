@@ -1,4 +1,4 @@
-class Coin {
+module.exports = class Coin {
 
     constructor() {
 

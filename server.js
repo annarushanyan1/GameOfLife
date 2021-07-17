@@ -62,7 +62,7 @@ function generator(matLen, gr, grEat,pr,c,toxic,water) {
             matrix[x][y] = 6;
         }
     }
-    
+
 io.sockets.emit('send matrix', matrix)
     return matrix;
 }
@@ -74,10 +74,11 @@ io.sockets.emit('send matrix', matrix)
  coinArr = [];
  toxicArr = [];
  waterArr = [];//___________________________________
+ 
 
  Grass = require("./Grass")
-     GrassEater = require("./GrassEater");
-     Coin = require("./Coin");
+GrassEater = require("./GrassEater");
+Coin = require("./Coin");
 LivingCreature = require("./LivingCreature");
 Coin = require("./Coin");
 Predator = require("./Predator");
@@ -126,14 +127,19 @@ Water = require("./Water");
             }
 
         }
+
     }
+
+
+
+    
 
 io.sockets.emit('send matrix', matrix)
 
 
  }
 
- matrix = generator(24, 40, 20,5,10,10,10);
+ matrix = generator(20, 40, 20,5,10,10,10);
 
 
  function game(){
@@ -156,6 +162,10 @@ io.sockets.emit('send matrix', matrix)
         waterArr[i].mul();
     }
     io.sockets.emit("send matrix", matrix);
+    
+io.sockets.emit('send arr', grassEaterArr);
+
+
  }
  setInterval(game, 1000);
 

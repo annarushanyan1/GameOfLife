@@ -3,7 +3,7 @@ let side = 40;
 
 function setup() {
     frameRate(5);
-    createCanvas(20 * 40,  24* 40);
+    createCanvas(20 * 40,  20 * 40);
     background('#acacac');
 
     
@@ -63,6 +63,16 @@ setInterval(
     },1000
 )
 
+setInterval(
+    function () {
+    socket.on('send arr',printt)
+    },1000
+)
+
+
+function printt(grassEaterArr){
+    console.log(grassEaterArr.length)
+}
 
 
 

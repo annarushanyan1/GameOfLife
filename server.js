@@ -4,6 +4,8 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require("fs");
 
+weather = "summer";
+
 app.use(express.static("."));
 
 app.get('/', function (req, res) {
@@ -11,8 +13,8 @@ app.get('/', function (req, res) {
 });
 server.listen(3000);
 matrix = [];
-function generator(matLen, gr, grEat,pr,c,toxic,water) {
-    
+function generator(matLen, gr, grEat, pr, c, toxic, water) {
+
 
     for (let i = 0; i < matLen; i++) {
         matrix[i] = [];
@@ -63,20 +65,20 @@ function generator(matLen, gr, grEat,pr,c,toxic,water) {
         }
     }
 
-io.sockets.emit('send matrix', matrix)
+    io.sockets.emit('send matrix', matrix)
     return matrix;
 }
 
 //___________________________
- grassArr = [];
- grassEaterArr = [];
- predatorArr = [];
- coinArr = [];
- toxicArr = [];
- waterArr = [];//___________________________________
- 
+grassArr = [];
+grassEaterArr = [];
+predatorArr = [];
+coinArr = [];
+toxicArr = [];
+waterArr = [];//___________________________________
 
- Grass = require("./Grass")
+
+Grass = require("./Grass")
 GrassEater = require("./GrassEater");
 Coin = require("./Coin");
 LivingCreature = require("./LivingCreature");
@@ -89,9 +91,9 @@ Water = require("./Water");
 
 
 
- side = 40;
+side = 40;
 
- function createObject(matrix){
+function createObject(matrix) {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
 
@@ -117,11 +119,11 @@ Water = require("./Water");
                 coinArr.push(c);
 
             }
-            if(matrix[i][j]== 5){
+            if (matrix[i][j] == 5) {
                 var toxic = new Toxic(j, i);
                 toxicArr.push(toxic);
             }
-            if(matrix[i][j]== 6){
+            if (matrix[i][j] == 6) {
                 var w = new Water(j, i);
                 waterArr.push(w);
             }
@@ -132,18 +134,18 @@ Water = require("./Water");
 
 
 
-    
-
-io.sockets.emit('send matrix', matrix)
 
 
- }
-
- matrix = generator(20, 40, 20,5,10,10,10);
+    io.sockets.emit('send matrix', matrix)
 
 
- function game(){
-     
+}
+
+matrix = generator(20, 40, 20, 5, 10, 10, 10);
+
+
+function game() {
+
     for (var i in grassArr) {
         grassArr[i].mul();
     }
@@ -162,14 +164,51 @@ io.sockets.emit('send matrix', matrix)
         waterArr[i].mul();
     }
     io.sockets.emit("send matrix", matrix);
-    
-io.sockets.emit('send arr', grassEaterArr);
+
+    io.sockets.emit('send arr', grassEaterArr);
 
 
- }
- setInterval(game, 1000);
+}
+setInterval(game, 1000);
 
 
- io.on('connection', function (socket) {
+io.on('connection', function (socket) {
     createObject(matrix)
 })
+
+
+var statistics = {
+};
+
+setInterval(function(){
+    statistics.grass = grassArr.length;
+    statistics.grassEater = grassEaterArr.length;
+    statistics.Predator = predatorArr.length;
+    statistics.Toxic = toxicArr.length;
+    statistics.Water = waterArr.length;
+    statistics.Coin = coinArr.length;
+
+    fs.writeFileSync("statistics.json",JSON.stringify(statistics))
+},1000)
+
+weather = "summer";
+function chWeather() {
+    if (weather == "summer"){
+        weather = "autumn"
+    }else if (weather == "autumn"){
+        weather = "winter"
+    }else if (weather == "winter"){
+        weather = "spring"
+    }
+    if (weather == "spring"){
+        weather = "summer"
+    }
+    console.log(weather)
+
+    io.sockets.emit("send weather", weather);
+}
+
+// io.sockets.emit('send chWeather()', chWeather)
+
+
+setInterval(chWeather, 4000);

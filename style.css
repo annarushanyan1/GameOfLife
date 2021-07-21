@@ -1,0 +1,20 @@
+button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+border:none;
+
+    text-align: center;
+    text-decoration: none;
+  
+    
+  }
+
+  li{
+    list-style:none;
+    margin-right: 10px
+  }
+
+  ul{
+      margin-top:50px;
+      display: flex;
+  }

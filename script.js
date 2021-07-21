@@ -3,20 +3,44 @@ let side = 40;
 
 function setup() {
     frameRate(5);
-    createCanvas(20 * 40,  20 * 40);
+    createCanvas(20 * 40, 20 * 40);
     background('#acacac');
 
-    
+
 
 }
 
+weather = "summer";
+
+socket.on('send weather', function (data) {
+     weather = data; 
+    }
+    )
+
+
+// socket.on("send chWeather()")
+
+
+
+
 function nkarel(matrix) {
-   
+    // console.log(weather)
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
+       
 
             if (matrix[y][x] == 1) {
-                fill("green");
+                if (weather == "summer") {
+                    fill("#00ff53");
+                }
+                if (weather == "autumn") {
+                    fill(" #b6f013");
+                }
+                if (weather == "winter") {
+                    fill("#cdf7fe");
+                } if (weather == "spring") {
+                    fill("green");
+                }
             }
             else if (matrix[y][x] == 0) {
                 fill("#acacac");
@@ -25,7 +49,7 @@ function nkarel(matrix) {
             }
             else if (matrix[y][x] == 3) {
                 fill('red');
-            }    else if (matrix[y][x] == 6) {
+            } else if (matrix[y][x] == 6) {
                 fill('blue');
             }
 
@@ -57,20 +81,13 @@ function nkarel(matrix) {
 
 }
 
-setInterval(
-    function () {
-    socket.on('send matrix', nkarel)
-    },1000
-)
-
-setInterval(
-    function () {
-    socket.on('send arr',printt)
-    },1000
-)
 
 
-function printt(grassEaterArr){
+socket.on('send matrix', nkarel)
+
+socket.on('send arr', printt)
+
+function printt(grassEaterArr) {
     console.log(grassEaterArr.length)
 }
 

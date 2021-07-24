@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 });
 server.listen(3000);
 matrix = [];
-function generator(matLen, gr, grEat, pr, c, toxic, water) {
+function generator(matLen, gr, grEat, pr, c, toxic, water,stone) {
 
 
     for (let i = 0; i < matLen; i++) {
@@ -65,6 +65,14 @@ function generator(matLen, gr, grEat, pr, c, toxic, water) {
         }
     }
 
+    for (let i = 0; i < stone; i++) {
+        let x = Math.floor(Math.random() * matLen);
+        let y = Math.floor(Math.random() * matLen);
+        if (matrix[x][y] == 0) {
+            matrix[x][y] = 7;
+        }
+    }
+
     io.sockets.emit('send matrix', matrix)
     return matrix;
 }
@@ -76,6 +84,7 @@ predatorArr = [];
 coinArr = [];
 toxicArr = [];
 waterArr = [];//___________________________________
+stoneArr = [];
 
 
 Grass = require("./Grass")
@@ -86,8 +95,7 @@ Coin = require("./Coin");
 Predator = require("./Predator");
 Toxic = require("./Toxic");
 Water = require("./Water");
-
-
+Stone = require("./Stone")
 
 
 
@@ -128,6 +136,11 @@ function createObject(matrix) {
                 waterArr.push(w);
             }
 
+            if (matrix[i][j] == 7) {
+                var st = new Stone(j, i);
+                stoneArr.push(st);
+            }
+
         }
 
     }
@@ -141,7 +154,7 @@ function createObject(matrix) {
 
 }
 
-matrix = generator(20, 40, 20, 5, 10, 10, 10);
+matrix = generator(20, 40, 20, 5, 10, 10, 10,10);
 
 
 function game() {
@@ -174,6 +187,11 @@ setInterval(game, 1000);
 
 io.on('connection', function (socket) {
     createObject(matrix)
+
+    socket.on("send addGrass",addGrass)
+    socket.on("send addGrassEater",addGrassEater)
+    socket.on("send killAll",killAll)
+
 })
 
 
@@ -187,6 +205,7 @@ setInterval(function(){
     statistics.Toxic = toxicArr.length;
     statistics.Water = waterArr.length;
     statistics.Coin = coinArr.length;
+    statistics.Stone = stoneArr.length;
 
     fs.writeFileSync("statistics.json",JSON.stringify(statistics))
 },1000)
@@ -212,3 +231,52 @@ function chWeather() {
 
 
 setInterval(chWeather, 4000);
+
+
+// socket.on('send addGrass', addGrass())
+
+
+function addGrass(){
+    
+        let x = Math.floor(Math.random() * 20);
+        let y = Math.floor(Math.random() * 20);
+        if (matrix[x][y] == 0) {
+            matrix[x][y] = 1;
+        }
+
+
+    
+    console.log("adding grass")
+}
+
+function addGrassEater(){
+    
+    let x = Math.floor(Math.random() * 20);
+    let y = Math.floor(Math.random() * 20);
+    if (matrix[x][y] == 0) {
+        matrix[x][y] = 2;
+    }
+
+
+
+console.log("adding grassEater")
+}
+
+
+function killAll(){
+
+    grassArr=[];
+    grassEaterArr = [];
+    PredatorArr = [];
+    waterArr = [];
+    
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            matrix[j][i]=0;
+            
+        }
+    }
+
+    io.sockets.emit("send matrix",matrix)
+}
+

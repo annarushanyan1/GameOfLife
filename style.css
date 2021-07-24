@@ -1,12 +1,17 @@
 button {
     background-color: #4CAF50; /* Green */
     color: white;
-border:none;
-
+    border:none;
+  padding: 20px;
     text-align: center;
-    text-decoration: none;
+
   
     
+  }
+
+  .eater{
+    background-color: #fbff00; 
+    color: black;
   }
 
   li{

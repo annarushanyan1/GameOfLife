@@ -27,7 +27,4 @@ module.exports = class Water extends LivingCreature{
     }
 
 
-
-
-
 }
